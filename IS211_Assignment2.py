@@ -8,7 +8,8 @@ def downloadData(url=str):
 
 # do I need to tell the function where to put the file?
 
+import datetime
+
 def processData():
     """Takes the contents of the file as the first parameter, process the file line by line, and returns
     a dictionary. The dictionary maps a person's ID to a tuple (name, birthday)"""
-    
