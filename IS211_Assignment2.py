@@ -7,28 +7,43 @@ def downloadData(url=str):
     import urllib2
     response = urllib2.urlopen('https://s3.amazonaws.com/cuny-is211-spring2015/birthdays100.csv')
     html = response.read()
+    return html
 
-# do I need to tell the function where to put the file?
+#downloadData()
 
-import datetime
+from datetime import date
 import time
-def processData():
+def processData(html):
     """Takes the contents of the file as the first parameter, process the file line by line, and returns
     a dictionary. The dictionary maps a person's ID to a tuple (name, birthday)"""
+    kerrylinebyline = html.split("\n")
+    #print(kerrylinebyline)
+
+    kerrydict = {}
+
+    for x in range(1, len(kerrylinebyline)-1):
+        ktempsplit = kerrylinebyline[x].split(',')
+
+        ktempdate = ktempsplit[2].split("/")
+        #print(ktempsplit)
+        #print(ktempdate)
+
+        try:
+            kerrydict[int(ktempsplit[0])] = (ktempsplit[1], date(int(ktempdate[2]), int(ktempdate[1]), int(ktempdate[0])))
+        except:
+            print("Error on line %d", x)
+    print(kerrydict)
+
+import logging
+KERRY_LOGFORM = "Error processing line %(lineno)d for ID# %d"
+logging.basicConfig(filename = "assignment2.log",
+                    level = logging.ERROR,
+                    format = KERRY_LOGFORM,
+                    filemode = 'w')
+logger = logging.getLogger()
 
 def displayPerson(id=int, personData={}):
     """This function prints the name and birthday of a given user identified by the input ID"""
+    #print()
 
-import logging
-
-logger = logging.getLogger("assignment2.xls")
-
-csvLogger = logging.getLogger("assignment2.csv")
-csvLogger.debug("Trying")
-csvLogger.warning("File")
-csvLogger.error("File unexpected")
-csvLogger.critical("File too large")
-
-logger.exception("Error reading file")
-logger.error("Error reading file")
-logger.log(logging.error, "Error reading file '%s' at offset %d", assignment2.csv, offset, exc_info=1)
+processData(downloadData())
